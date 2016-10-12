@@ -32,7 +32,8 @@ function Map(width, height){
 
 function generateBsp(width, height){
 	//less than 2 doesn't really make sense
-	var minRoomSize = 2;
+	var minRoomSize = 3;
+	var maxSkippedIterations = 2;
 	var VERTICAL = true;
 	var HORIZONTAL = !VERTICAL;
 	var maxIterations = 5;
@@ -56,14 +57,15 @@ function generateBsp(width, height){
 			//check if there's enough space to split
 			var margin = 1;
 			if (this.width >= minRoomSize && this.height >= minRoomSize){
+				var skip = Math.max(Math.floor(Math.random() * (this.n-1) + 1), maxSkippedIterations);
 				//decide on split axis (vertical/horizontal)
 				if (this.splitType == VERTICAL){
 					//split the width
 					if (this.width >= minRoomSize*2+margin) {
 						this.split = Math.floor(Math.random() * (this.width - minRoomSize*2)) + minRoomSize+margin;
 						console.log(this.split, this.width);
-						this.a = new Node(x, y, this.split-margin, this.height, this.n-1, !this.splitType, this);
-						this.b = new Node(x + this.split, y, this.width-this.split, this.height, this.n-1, !this.splitType, this);
+						this.a = new Node(x, y, this.split-margin, this.height, this.n-skip, !this.splitType, this);
+						this.b = new Node(x + this.split, y, this.width-this.split, this.height, this.n-skip, !this.splitType, this);
 					}
 					else{
 						this.n = 0;
@@ -75,8 +77,8 @@ function generateBsp(width, height){
 					if (this.height >= minRoomSize*2+margin){
 						this.split = Math.floor(Math.random() * (this.height - minRoomSize*2)) + minRoomSize+margin;
 						console.log(this.split, this.height);
-						this.a = new Node(x, y, this.width, this.split-margin, this.n-1, !this.splitType, this);
-						this.b = new Node(x, y + this.split, this.width, this.height-this.split, this.n-1, !this.splitType, this);
+						this.a = new Node(x, y, this.width, this.split-margin, this.n-skip, !this.splitType, this);
+						this.b = new Node(x, y + this.split, this.width, this.height-this.split, this.n-skip, !this.splitType, this);
 					}
 					else{
 						this.n = 0;

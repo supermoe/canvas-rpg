@@ -7,7 +7,7 @@ player = null;
 function main(){
 	stage = new createjs.Stage("canvas");
 	levelGfxContainer = new createjs.Container();
-	map = new Map(10, 10);
+	map = new Map(15, 15);
 	listener = new window.keypress.Listener();
 	player = new Player(0, 0);
 
