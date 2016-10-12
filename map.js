@@ -24,6 +24,55 @@ function Map(width, height){
 	}
 }
 
+function generateBsp(width, height){
+	//less than 2 doesn't really make sense
+	var minRoomSize = 2;
+	var VERTICAL = true;
+	var HORIZONTAL = !VERTICAL;
+	var maxIterations = 5;
+
+	function Node(x, y, width, height, n, splitType, parent){
+		this.parent = parent;
+		this.a = null;
+		this.b = null;
+		this.width = width;
+		this.height = height;
+		this.splitType = splitType;
+		this.split = null;
+		this.x = x;
+		this.y = y;
+		if (this.n<=0){
+			//do nothing, reached end of branch
+		}
+		else{
+			//check if there's enough space to split
+			if (this.width >= minRoomSize*2 && this.height >= minRoomSize*2){
+				//decide on split axis (vertical/horizontal)
+				if (this.splitType == VERTICAL){
+					//split the width
+					this.split = Math.floor(Math.random() * (this.width - minRoomSize)) + minRoomSize;
+					this.a = new Node(x, y, this.split, height, this.n-1, !this.splitType, this);
+					this.b = new Node(this.split, y, width-this.split, height, this.n-1, !this.splitType, this);
+				}
+				else{
+					//split the height
+					this.split = Math.floor(Math.random() * (this.height - minRoomSize)) + minRoomSize;
+					this.a = new Node(x, y, width, this.split, this.n-1, !this.splitType, this);
+					this.b = new Node(x, this.split, width, height-this.split, this.n-1, !this.splitType, this);
+				}
+
+			}
+			else{
+				//end the branch because we ran out of space
+				this.n = 0;
+			}
+		}
+	}
+	return new Node(0, 0, width, height, maxIterations, VERTICAL, null);
+}
+
+console.log(generateBsp(30, 30));
+
 function Tile(gfx){
 	this.gfx = gfx;
 	this.player = null;
