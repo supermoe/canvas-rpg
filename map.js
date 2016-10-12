@@ -6,20 +6,26 @@ function Map(width, height){
 	this.width = width;
 	this.height = height;
 	this.tiles = []
+	var rooms = generateBsp(this.width, this.height);
+	console.log(rooms);
 	for (var x = 0; x < this.width; x++){
 		this.tiles.push([])
 		for (var y = 0; y < this.height; y++){
-			tile = null;
-
-			var gfx = new createjs.Shape();
-			gfx.graphics.beginFill("lightgray");
-			gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
-			gfx.x = tileSize/2 + x * (tileSize + tileSpacing);
-			gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
-			levelGfxContainer.addChild(gfx);
-			tile = new Tile(gfx);
-
-			this.tiles[x].push(tile);
+			this.tiles[x].push(null)
+		}
+	}
+	for (var room of rooms){
+		for (var x = room.x; x < room.x+room.width; x++){
+			this.tiles.push([])
+			for (var y = room.y; y < room.y+room.height; y++){
+				var gfx = new createjs.Shape();
+				gfx.graphics.beginFill("lightgray");
+				gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
+				gfx.x = tileSize/2 + x * (tileSize + tileSpacing);
+				gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
+				levelGfxContainer.addChild(gfx);
+				this.tiles[x][y] = new Tile(gfx);
+			}
 		}
 	}
 }
@@ -30,6 +36,7 @@ function generateBsp(width, height){
 	var VERTICAL = true;
 	var HORIZONTAL = !VERTICAL;
 	var maxIterations = 5;
+	var rooms = [];
 
 	function Node(x, y, width, height, n, splitType, parent){
 		this.parent = parent;
@@ -43,36 +50,51 @@ function generateBsp(width, height){
 		this.y = y;
 		if (this.n<=0){
 			//do nothing, reached end of branch
+			rooms.push(this);
 		}
 		else{
 			//check if there's enough space to split
 			var margin = 1;
-			if (this.width >= minRoomSize*2+margin && this.height >= minRoomSize*2+margin){
+			if (this.width >= minRoomSize && this.height >= minRoomSize){
 				//decide on split axis (vertical/horizontal)
 				if (this.splitType == VERTICAL){
 					//split the width
-					this.split = Math.floor(Math.random() * (this.width - minRoomSize*2+margin)) + minRoomSize+margin;
-					this.a = new Node(x, y, this.split-1, height, this.n-1, !this.splitType, this);
-					this.b = new Node(this.split, y, width-this.split, height, this.n-1, !this.splitType, this);
+					if (this.width >= minRoomSize*2+margin) {
+						this.split = Math.floor(Math.random() * (this.width - minRoomSize*2)) + minRoomSize+margin;
+						console.log(this.split, this.width);
+						this.a = new Node(x, y, this.split-margin, this.height, this.n-1, !this.splitType, this);
+						this.b = new Node(x + this.split, y, this.width-this.split, this.height, this.n-1, !this.splitType, this);
+					}
+					else{
+						this.n = 0;
+						rooms.push(this);
+					}
 				}
 				else{
 					//split the height
-					this.split = Math.floor(Math.random() * (this.height - minRoomSize*2+margin)) + minRoomSize+margin;
-					this.a = new Node(x, y, width, this.split-1, this.n-1, !this.splitType, this);
-					this.b = new Node(x, this.split, width, height-this.split, this.n-1, !this.splitType, this);
+					if (this.height >= minRoomSize*2+margin){
+						this.split = Math.floor(Math.random() * (this.height - minRoomSize*2)) + minRoomSize+margin;
+						console.log(this.split, this.height);
+						this.a = new Node(x, y, this.width, this.split-margin, this.n-1, !this.splitType, this);
+						this.b = new Node(x, y + this.split, this.width, this.height-this.split, this.n-1, !this.splitType, this);
+					}
+					else{
+						this.n = 0;
+						rooms.push(this);
+					}
 				}
 
 			}
 			else{
 				//end the branch because we ran out of space
 				this.n = 0;
+				rooms.push(this);
 			}
 		}
 	}
-	return new Node(0, 0, width, height, maxIterations, VERTICAL, null);
+	new Node(0, 0, width, height, maxIterations, VERTICAL, null);
+	return rooms;
 }
-
-console.log(generateBsp(30, 30));
 
 function Tile(gfx){
 	this.gfx = gfx;
