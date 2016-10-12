@@ -46,18 +46,19 @@ function generateBsp(width, height){
 		}
 		else{
 			//check if there's enough space to split
-			if (this.width >= minRoomSize*2 && this.height >= minRoomSize*2){
+			var margin = 1;
+			if (this.width >= minRoomSize*2+margin && this.height >= minRoomSize*2+margin){
 				//decide on split axis (vertical/horizontal)
 				if (this.splitType == VERTICAL){
 					//split the width
-					this.split = Math.floor(Math.random() * (this.width - minRoomSize)) + minRoomSize;
-					this.a = new Node(x, y, this.split, height, this.n-1, !this.splitType, this);
+					this.split = Math.floor(Math.random() * (this.width - minRoomSize*2+margin)) + minRoomSize+margin;
+					this.a = new Node(x, y, this.split-1, height, this.n-1, !this.splitType, this);
 					this.b = new Node(this.split, y, width-this.split, height, this.n-1, !this.splitType, this);
 				}
 				else{
 					//split the height
-					this.split = Math.floor(Math.random() * (this.height - minRoomSize)) + minRoomSize;
-					this.a = new Node(x, y, width, this.split, this.n-1, !this.splitType, this);
+					this.split = Math.floor(Math.random() * (this.height - minRoomSize*2+margin)) + minRoomSize+margin;
+					this.a = new Node(x, y, width, this.split-1, this.n-1, !this.splitType, this);
 					this.b = new Node(x, this.split, width, height-this.split, this.n-1, !this.splitType, this);
 				}
 
