@@ -38,7 +38,6 @@ function Map(width, height){
 		levelGfxContainer.addChild(gfx);
 		this.tiles[bridge.x][bridge.y] = new Tile(gfx);
 	}
-	console.log(bridges);
 }
 
 function generateBsp(width, height){
@@ -48,9 +47,23 @@ function generateBsp(width, height){
 	var VERTICAL = true;
 	var HORIZONTAL = !VERTICAL;
 	var maxIterations = 5;
+	var emptySpace = [];
+	for (var x = 0; x < width; x++){
+		emptySpace.push([])
+		for (var y = 0; y < height; y++){
+			emptySpace[x].push(false);
+		}
+	}
 	var rooms = [];
 	var bridges = [];
 
+	function createEmptySpace(_x, _y, width, height){
+		for (var x = _x; x < _x+width; x++){
+			for (var y = _y; y < _y+height; y++){
+				emptySpace[x][y] = true;
+			}
+		}
+	}
 
 	function Bridge(x, y){
 		this.x = x;
@@ -81,9 +94,14 @@ function generateBsp(width, height){
 					//split the width
 					if (this.width >= minRoomSize*2+margin) {
 						this.split = Math.floor(Math.random() * (this.width - minRoomSize*2)) + minRoomSize+margin;
+						createEmptySpace(x + this.split-margin, y, 1, height);
 						this.a = new Node(x, y, this.split-margin, this.height, this.n-skip, !this.splitType, this);
 						this.b = new Node(x + this.split, y, this.width-this.split, this.height, this.n-skip, !this.splitType, this);
-						var bridgeY = y;
+						var possibleBridgesY = [];
+						for (var i = y; i < y+this.height; i++)
+							if (!(emptySpace[x+this.split-margin-1][i]) && !(emptySpace[x+this.split+1][i]))
+								possibleBridgesY.push(i);
+						var bridgeY = possibleBridgesY[Math.floor(Math.random()*possibleBridgesY.length)];
 						bridges.push(new Bridge(this.x+this.split-margin, bridgeY));
 					}
 					else{
@@ -95,9 +113,14 @@ function generateBsp(width, height){
 					//split the height
 					if (this.height >= minRoomSize*2+margin){
 						this.split = Math.floor(Math.random() * (this.height - minRoomSize*2)) + minRoomSize+margin;
+						createEmptySpace(x, y + this.split-margin, width, 1);
 						this.a = new Node(x, y, this.width, this.split-margin, this.n-skip, !this.splitType, this);
 						this.b = new Node(x, y + this.split, this.width, this.height-this.split, this.n-skip, !this.splitType, this);
-						var bridgeX = x;
+						var possibleBridgesX = [];
+						for (var i = x; i < x+this.width; i++)
+							if (!(emptySpace[i][y+this.split-margin-1]) && !(emptySpace[i][y+this.split+1]))
+								possibleBridgesX.push(i);
+						var bridgeX = possibleBridgesX[Math.floor(Math.random()*possibleBridgesX.length)];
 						bridges.push(new Bridge(bridgeX, y+this.split-margin));
 					}
 					else{
