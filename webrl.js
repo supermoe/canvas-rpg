@@ -3,6 +3,7 @@ levelGfxContainer = null;
 listener = null;
 stage = null;
 player = null;
+enemies = [];
 
 function main(){
 	stage = new createjs.Stage("canvas");
@@ -10,6 +11,7 @@ function main(){
 	map = new Map(15, 15);
 	listener = new window.keypress.Listener();
 	player = new Player(0, 0);
+	enemies.push(new Enemy(0, 1));
 
 	stage.addChild(levelGfxContainer);
 	createjs.Ticker.setFPS(60);

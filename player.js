@@ -10,12 +10,25 @@ function Player(x, y){
 	this.moveTo = function(x, y){
 		//check if moving within map boundaries and on a tile
 		if ((x >= 0 && x < map.width) && (y >= 0 && y < map.height) && map.tiles[x][y] != null){
-			player.x = x;
-			player.y = y;
-			createjs.Tween.get(this.gfx).to({
-				x: tileSize/2 + x * (tileSize + tileSpacing),
-				y: tileSize/2 + y * (tileSize + tileSpacing)
-			}, stepDuration, createjs.Ease.sineOut);
+			var enemy = null;
+			for (var e of enemies){
+				if (e.x == x && e.y == y){
+					enemy = e;
+					break;
+				}
+			}
+			//check collision with enemies
+			if (enemy == null){
+				player.x = x;
+				player.y = y;
+				createjs.Tween.get(this.gfx).to({
+					x: tileSize/2 + x * (tileSize + tileSpacing),
+					y: tileSize/2 + y * (tileSize + tileSpacing)
+				}, stepDuration, createjs.Ease.sineOut);
+			}
+			else{
+				console.log("bump");
+			}
 		}
 		else {
 			console.log("can't move there")
