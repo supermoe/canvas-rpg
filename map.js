@@ -6,8 +6,9 @@ function Map(width, height){
 	this.width = width;
 	this.height = height;
 	this.tiles = []
-	var rooms = generateBsp(this.width, this.height);
-	console.log(rooms);
+	var gen = generateBsp(this.width, this.height);
+	var rooms = gen[0];
+	var bridges = gen[1];
 	for (var x = 0; x < this.width; x++){
 		this.tiles.push([])
 		for (var y = 0; y < this.height; y++){
@@ -28,6 +29,16 @@ function Map(width, height){
 			}
 		}
 	}
+	for (var bridge of bridges){
+		var gfx = new createjs.Shape();
+		gfx.graphics.beginFill("lightgray");
+		gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
+		gfx.x = tileSize/2 + bridge.x * (tileSize + tileSpacing);
+		gfx.y = tileSize/2 + bridge.y * (tileSize + tileSpacing);
+		levelGfxContainer.addChild(gfx);
+		this.tiles[bridge.x][bridge.y] = new Tile(gfx);
+	}
+	console.log(bridges);
 }
 
 function generateBsp(width, height){
@@ -38,6 +49,13 @@ function generateBsp(width, height){
 	var HORIZONTAL = !VERTICAL;
 	var maxIterations = 5;
 	var rooms = [];
+	var bridges = [];
+
+
+	function Bridge(x, y){
+		this.x = x;
+		this.y = y;
+	}
 
 	function Node(x, y, width, height, n, splitType, parent){
 		this.parent = parent;
@@ -63,9 +81,10 @@ function generateBsp(width, height){
 					//split the width
 					if (this.width >= minRoomSize*2+margin) {
 						this.split = Math.floor(Math.random() * (this.width - minRoomSize*2)) + minRoomSize+margin;
-						console.log(this.split, this.width);
 						this.a = new Node(x, y, this.split-margin, this.height, this.n-skip, !this.splitType, this);
 						this.b = new Node(x + this.split, y, this.width-this.split, this.height, this.n-skip, !this.splitType, this);
+						var bridgeY = y;
+						bridges.push(new Bridge(this.x+this.split-margin, bridgeY));
 					}
 					else{
 						this.n = 0;
@@ -76,9 +95,10 @@ function generateBsp(width, height){
 					//split the height
 					if (this.height >= minRoomSize*2+margin){
 						this.split = Math.floor(Math.random() * (this.height - minRoomSize*2)) + minRoomSize+margin;
-						console.log(this.split, this.height);
 						this.a = new Node(x, y, this.width, this.split-margin, this.n-skip, !this.splitType, this);
 						this.b = new Node(x, y + this.split, this.width, this.height-this.split, this.n-skip, !this.splitType, this);
+						var bridgeX = x;
+						bridges.push(new Bridge(bridgeX, y+this.split-margin));
 					}
 					else{
 						this.n = 0;
@@ -95,7 +115,7 @@ function generateBsp(width, height){
 		}
 	}
 	new Node(0, 0, width, height, maxIterations, VERTICAL, null);
-	return rooms;
+	return [rooms, bridges];
 }
 
 function Tile(gfx){
