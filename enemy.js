@@ -16,7 +16,7 @@ function Enemy(x, y){
 	this.gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
 	levelGfxEntities.addChild(this.gfx);
 
-	this.life = 10;
+	this.life = 5;
 	this.hp = this.life;
 	this.stopColliding = function(){
 		if (enemies.indexOf(this)>0)
