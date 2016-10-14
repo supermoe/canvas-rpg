@@ -2,10 +2,10 @@ function Enemy(x, y){
 	this.x = x;
 	this.y = y;
 	this.gfx = new createjs.Shape();
-	this.fillCmd = this.gfx.graphics.beginFill("#D5213F").command;
+	this.fillCmd = this.gfx.graphics.beginFill("#EA4AA0").command;
 	this.gfx.flash = 0;
 	this.updateFlash = function(event){
-		var c = Color("#0000FF");
+		var c = Color("#EA4AA0");
 		var flashColor = Color("#FFFFFF");
 		c = c.blend(flashColor, Math.min(Math.max(this.gfx.flash,0),1));
 		this.fillCmd.style = c.toString();

@@ -30,7 +30,7 @@ function Map(width, height){
 			for (var y = room.y; y < room.y+room.height; y++){
 				this.possibleSpawnPositions.push({x:x, y:y});
 				var gfx = new createjs.Shape();
-				gfx.graphics.beginFill("#a9c6bc");
+				gfx.graphics.beginFill("#73A9CA");
 				gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
 				gfx.x = tileSize/2 + x * (tileSize + tileSpacing);
 				gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
@@ -41,7 +41,7 @@ function Map(width, height){
 	}
 	for (var bridge of bridges){
 		var gfx = new createjs.Shape();
-		gfx.graphics.beginFill("#a9c6bc");
+		gfx.graphics.beginFill("#73A9CA");
 		gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
 		gfx.x = tileSize/2 + bridge.x * (tileSize + tileSpacing);
 		gfx.y = tileSize/2 + bridge.y * (tileSize + tileSpacing);
