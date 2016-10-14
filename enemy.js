@@ -18,4 +18,9 @@ function Enemy(x, y){
 
 	this.life = 10;
 	this.hp = this.life;
+
+	this.kill = function(){
+			levelGfxEntities.removeChild(this.gfx);
+			enemies.splice(enemies.indexOf(this), 1);
+	}
 }

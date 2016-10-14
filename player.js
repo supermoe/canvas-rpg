@@ -8,23 +8,29 @@ function Player(x, y){
 	this.gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
 	levelGfxEntities.addChild(this.gfx);
 
-	this.atk = 10;
+	this.atk = 1;
 	this.life = 10;
 	this.hp = this.life;
 
 	this.damage = function(enemy){
 		var dmg = Math.min(this.atk, enemy.hp);
-		enemy.hp-dmg;
-		console.log("did "+dmg+" dmg.");
+		enemy.hp-=dmg;
+		console.log("did "+dmg+" dmg. ("+enemy.hp+")");
 		createjs.Tween.get(enemy.gfx).to({
-			scaleX: 1.5,
-			scaleY: 1.5,
+			scaleX: 1.6,
+			scaleY: 1.6,
 			flash: 1
 		}, 100).to({
 			scaleX: 1,
 			scaleY: 1,
 			flash: 0
-		}, 300, createjs.Ease.backOut);
+		}, 300, createjs.Ease.backOut).call(function(){
+			if (enemy.hp <= 0){
+				createjs.Tween.get(enemy.gfx).to({
+					alpha: 0
+				}, 300).call(enemy.kill);
+			}
+		});
 		var dmgText = new createjs.Text(dmg, "30px Main", "white");
 		dmgText.rotation = Math.random()*60-30;
 		dmgText.regX = dmgText.getBounds().width/2;
