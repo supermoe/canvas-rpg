@@ -9,7 +9,6 @@ function Enemy(x, y){
 		var flashColor = Color("#FFFFFF");
 		c = c.blend(flashColor, Math.min(Math.max(this.gfx.flash,0),1));
 		this.fillCmd.style = c.toString();
-		console.log(this.fillCmd.style);
 	}.bind(this);
 	this.gfx.addEventListener('tick', this.updateFlash);
 	this.gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
