@@ -1,4 +1,8 @@
+Color = net.brehaut.Color;
 map = null;
+levelGfxEntities = null;
+levelGfxOverlay = null;
+levelGfxTiles = null;
 levelGfxContainer = null;
 listener = null;
 stage = null;
@@ -7,13 +11,20 @@ enemies = [];
 
 function main(){
 	stage = new createjs.Stage("canvas");
+	levelGfxTiles = new createjs.Container();
+	levelGfxOverlay = new createjs.Container();
+	levelGfxEntities = new createjs.Container();
 	levelGfxContainer = new createjs.Container();
+	levelGfxContainer.addChild(levelGfxTiles);
+	levelGfxContainer.addChild(levelGfxEntities);
+	levelGfxContainer.addChild(levelGfxOverlay);
 	map = new Map(15, 15);
 	listener = new window.keypress.Listener();
 	player = new Player(0, 0);
 	enemies.push(new Enemy(0, 1));
 
 	stage.addChild(levelGfxContainer);
+	console.log(stage.children);
 	createjs.Ticker.setFPS(60);
 	createjs.Ticker.addEventListener("tick", stage);
 	createjs.Ticker.addEventListener("tick", cameraMovement);

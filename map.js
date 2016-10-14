@@ -20,22 +20,22 @@ function Map(width, height){
 			this.tiles.push([])
 			for (var y = room.y; y < room.y+room.height; y++){
 				var gfx = new createjs.Shape();
-				gfx.graphics.beginFill("lightgray");
+				gfx.graphics.beginFill("#a9c6bc");
 				gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
 				gfx.x = tileSize/2 + x * (tileSize + tileSpacing);
 				gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
-				levelGfxContainer.addChild(gfx);
+				levelGfxTiles.addChild(gfx);
 				this.tiles[x][y] = new Tile(gfx);
 			}
 		}
 	}
 	for (var bridge of bridges){
 		var gfx = new createjs.Shape();
-		gfx.graphics.beginFill("lightgray");
+		gfx.graphics.beginFill("#a9c6bc");
 		gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
 		gfx.x = tileSize/2 + bridge.x * (tileSize + tileSpacing);
 		gfx.y = tileSize/2 + bridge.y * (tileSize + tileSpacing);
-		levelGfxContainer.addChild(gfx);
+		levelGfxTiles.addChild(gfx);
 		this.tiles[bridge.x][bridge.y] = new Tile(gfx);
 	}
 }

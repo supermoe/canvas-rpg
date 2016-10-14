@@ -1,11 +1,14 @@
+@font-face {
+	font-family: "Main";
+	src: url(./font/Fairview_regular.otf) format("opentype");
+}
+
 body{
-	background: white;
+	font-family: "Main";
+	font-size: 30px;
+	background: #7B998F;
 }
 
 #canvas{
 	border: solid 1px black;
-}
-
-#tile{
-	background: blue;
 }
