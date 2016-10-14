@@ -13,41 +13,46 @@ function Player(x, y){
 	this.hp = this.life;
 
 	this.damage = function(enemy){
-		var dmg = Math.min(this.atk, enemy.hp);
-		enemy.hp-=dmg;
-		console.log("did "+dmg+" dmg. ("+enemy.hp+")");
-		createjs.Tween.get(enemy.gfx).to({
-			scaleX: 1.6,
-			scaleY: 1.6,
-			flash: 1
-		}, 100).to({
-			scaleX: 1,
-			scaleY: 1,
-			flash: 0
-		}, 300, createjs.Ease.backOut).call(function(){
+		if (enemy.hp>0){
+			var dmg = Math.min(this.atk, enemy.hp);
+			enemy.hp-=dmg;
 			if (enemy.hp <= 0){
-				createjs.Tween.get(enemy.gfx).to({
-					alpha: 0
-				}, 300).call(enemy.kill);
+				enemy.stopColliding();
 			}
-		});
-		var dmgText = new createjs.Text(dmg, "30px Main", "white");
-		dmgText.rotation = Math.random()*60-30;
-		dmgText.regX = dmgText.getBounds().width/2;
-		dmgText.regY = dmgText.getBounds().height/2;
-		dmgText.x = enemy.gfx.x;
-		dmgText.y = enemy.gfx.y-15;
-		//dmgText.regY = dmgText.getBounds().height/2;
-		levelGfxOverlay.addChild(dmgText);
-		dmgText.scaleX = 0;
-		createjs.Tween.get(dmgText).to({
-			scaleX: 1
-		}, 300, createjs.Ease.backOut).wait(200).to({
-			alpha: 0
-		}, 300, createjs.Ease.backOut);
-		createjs.Tween.get(dmgText).to({
-			y: dmgText.y-tileSize
-		}, 900, createjs.Ease.sineOut);
+			console.log("did "+dmg+" dmg. ("+enemy.hp+")");
+			createjs.Tween.get(enemy.gfx).to({
+				scaleX: 1.6,
+				scaleY: 1.6,
+				flash: 1
+			}, 100).to({
+				scaleX: 1,
+				scaleY: 1,
+				flash: 0
+			}, 300, createjs.Ease.backOut).call(function(){
+				if (enemy.hp <= 0){
+					createjs.Tween.get(enemy.gfx).to({
+						alpha: 0
+					}, 200).call(enemy.stopDrawing);
+				}
+			});
+			var dmgText = new createjs.Text(dmg, "30px Main", "white");
+			dmgText.rotation = Math.random()*60-30;
+			dmgText.regX = dmgText.getBounds().width/2;
+			dmgText.regY = dmgText.getBounds().height/2;
+			dmgText.x = enemy.gfx.x;
+			dmgText.y = enemy.gfx.y-15;
+			//dmgText.regY = dmgText.getBounds().height/2;
+			levelGfxOverlay.addChild(dmgText);
+			dmgText.scaleX = 0;
+			createjs.Tween.get(dmgText).to({
+				scaleX: 1
+			}, 300, createjs.Ease.backOut).wait(200).to({
+				alpha: 0
+			}, 300, createjs.Ease.backOut);
+			createjs.Tween.get(dmgText).to({
+				y: dmgText.y-tileSize
+			}, 900, createjs.Ease.sineOut);
+		}
 	}
 
 	this.moveTo = function(x, y){

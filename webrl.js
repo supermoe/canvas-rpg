@@ -21,7 +21,10 @@ function main(){
 	map = new Map(15, 15);
 	listener = new window.keypress.Listener();
 	player = new Player(0, 0);
-	enemies.push(new Enemy(0, 1));
+	for (var i = 0; i<5; i++){
+		var pos = map.getSpawnPosition();
+		enemies.push(new Enemy(pos.x, pos.y));
+	}
 
 	stage.addChild(levelGfxContainer);
 	console.log(stage.children);

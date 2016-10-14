@@ -18,9 +18,11 @@ function Enemy(x, y){
 
 	this.life = 10;
 	this.hp = this.life;
-
-	this.kill = function(){
-			levelGfxEntities.removeChild(this.gfx);
+	this.stopColliding = function(){
+		if (enemies.indexOf(this)>0)
 			enemies.splice(enemies.indexOf(this), 1);
-	}
+	}.bind(this);
+	this.stopDrawing = function(){
+			levelGfxEntities.removeChild(this.gfx);
+	}.bind(this);
 }

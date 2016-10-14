@@ -3,9 +3,18 @@ tileSpacing = 3;
 stepDuration = 150;
 
 function Map(width, height){
+	this.possibleSpawnPositions = [];
 	this.width = width;
 	this.height = height;
 	this.tiles = []
+
+	this.getSpawnPosition = function(){
+		var index = Math.floor(Math.random()*this.possibleSpawnPositions.length);
+		var pos = this.possibleSpawnPositions[index];
+		this.possibleSpawnPositions.splice(index, 1);
+		return pos;
+	}
+
 	var gen = generateBsp(this.width, this.height);
 	var rooms = gen[0];
 	var bridges = gen[1];
@@ -19,6 +28,7 @@ function Map(width, height){
 		for (var x = room.x; x < room.x+room.width; x++){
 			this.tiles.push([])
 			for (var y = room.y; y < room.y+room.height; y++){
+				this.possibleSpawnPositions.push({x:x, y:y});
 				var gfx = new createjs.Shape();
 				gfx.graphics.beginFill("#a9c6bc");
 				gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
