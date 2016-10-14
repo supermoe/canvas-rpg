@@ -32,7 +32,7 @@ function Player(x, y){
 				if (enemy.hp <= 0){
 					createjs.Tween.get(enemy.gfx).to({
 						alpha: 0
-					}, 200).call(enemy.stopDrawing);
+					}, 200).call(function(){enemy.stopDrawing(); enemy.stopColliding();});
 				}
 			});
 			var dmgText = new createjs.Text("-"+dmg, "30px Main", "white");

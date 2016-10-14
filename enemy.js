@@ -19,7 +19,7 @@ function Enemy(x, y){
 	this.life = 5;
 	this.hp = this.life;
 	this.stopColliding = function(){
-		if (enemies.indexOf(this)>0)
+		if (enemies.indexOf(this)>=0)
 			enemies.splice(enemies.indexOf(this), 1);
 	}.bind(this);
 	this.stopDrawing = function(){
