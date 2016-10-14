@@ -35,7 +35,7 @@ function Player(x, y){
 					}, 200).call(enemy.stopDrawing);
 				}
 			});
-			var dmgText = new createjs.Text(dmg, "30px Main", "white");
+			var dmgText = new createjs.Text("-"+dmg, "30px Main", "white");
 			dmgText.rotation = Math.random()*60-30;
 			dmgText.regX = dmgText.getBounds().width/2;
 			dmgText.regY = dmgText.getBounds().height/2;
@@ -51,7 +51,7 @@ function Player(x, y){
 			}, 300, createjs.Ease.backOut);
 			createjs.Tween.get(dmgText).to({
 				y: dmgText.y-tileSize
-			}, 900, createjs.Ease.sineOut);
+			}, 1000, createjs.Ease.elasticOut);
 		}
 	}
 
