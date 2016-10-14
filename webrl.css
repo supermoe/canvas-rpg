@@ -5,10 +5,11 @@
 
 body{
 	font-family: "Main";
+	color: white;
 	font-size: 30px;
 	background: #4381AB;
 }
 
 #canvas{
-	border: solid 1px black;
+	border: solid 1px white;
 }
