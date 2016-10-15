@@ -20,7 +20,7 @@ function Player(x, y){
 				enemy.stopColliding();
 			}
 			console.log("did "+dmg+" dmg. ("+enemy.hp+")");
-			createjs.Tween.get(enemy.gfx).to({
+			createjs.Tween.get(enemy.gfx, {override:true}).to({
 				scaleX: 1.6,
 				scaleY: 1.6,
 				flash: 1
@@ -30,7 +30,7 @@ function Player(x, y){
 				flash: 0
 			}, 300, createjs.Ease.backOut).call(function(){
 				if (enemy.hp <= 0){
-					createjs.Tween.get(enemy.gfx).to({
+					createjs.Tween.get(enemy.gfx, {override:true}).to({
 						alpha: 0
 					}, 200).call(function(){enemy.stopDrawing(); enemy.stopColliding();});
 				}
