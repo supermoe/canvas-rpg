@@ -1,20 +1,5 @@
 function Enemy(x, y){
-	this.x = x;
-	this.y = y;
-	this.gfx = new createjs.Shape();
-	this.fillCmd = this.gfx.graphics.beginFill("#EA4AA0").command;
-	this.gfx.flash = 0;
-	this.updateFlash = function(event){
-		var c = Color("#EA4AA0");
-		var flashColor = Color("#FFFFFF");
-		c = c.blend(flashColor, Math.min(Math.max(this.gfx.flash,0),1));
-		this.fillCmd.style = c.toString();
-	}.bind(this);
-	this.gfx.addEventListener('tick', this.updateFlash);
-	this.gfx.graphics.drawRect(-tileSize/2, -tileSize/2, tileSize, tileSize);
-	this.gfx.x = tileSize/2 + x * (tileSize + tileSpacing);
-	this.gfx.y = tileSize/2 + y * (tileSize + tileSpacing);
-	levelGfxEntities.addChild(this.gfx);
+	Entity.call(this, x, y, "#EA4AA0");
 
 	this.life = 5;
 	this.hp = this.life;
@@ -25,4 +10,12 @@ function Enemy(x, y){
 	this.stopDrawing = function(){
 			levelGfxEntities.removeChild(this.gfx);
 	}.bind(this);
+
+	this.onDeath = function() {
+		console.log("ded");
+		this.stopColliding();
+		createjs.Tween.get(this.gfx).to({
+			alpha: 0
+		}, 300).call(this.stopDrawing);
+	}
 }
